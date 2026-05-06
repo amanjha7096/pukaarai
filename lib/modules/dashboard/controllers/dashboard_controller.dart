@@ -13,6 +13,11 @@ class DashboardController extends GetxController {
   final selectedPeriod = 'today'.obs;
   final streakDays = 0.obs;
 
+  // Rx mirrors of TrackingController values, set up in onReady() so the view's
+  // Obx widgets register a real dependency on them from their first render.
+  final liveStepsToday = 0.0.obs;
+  final walkingStatusLive = 'unknown'.obs;
+
   TrackingController? _tracking;
 
   @override
@@ -30,6 +35,13 @@ class DashboardController extends GetxController {
     });
     try {
       _tracking = Get.find<TrackingController>();
+      // Seed the Rx mirrors with current values then keep them in sync.
+      liveStepsToday.value = _tracking!.liveSteps.value.toDouble();
+      walkingStatusLive.value = _tracking!.pedestrianStatus.value;
+      ever(_tracking!.liveSteps,
+          (int s) => liveStepsToday.value = s.toDouble());
+      ever(_tracking!.pedestrianStatus,
+          (String s) => walkingStatusLive.value = s);
     } catch (_) {}
   }
 
@@ -43,6 +55,7 @@ class DashboardController extends GetxController {
     isLoading.value = true;
     try {
       activities.assignAll(await _fetchForPeriod());
+      _refreshLiveSteps();
     } finally {
       isLoading.value = false;
     }
@@ -52,6 +65,16 @@ class DashboardController extends GetxController {
     try {
       activities.assignAll(await _fetchForPeriod());
       _loadStreak();
+      _refreshLiveSteps();
+    } catch (_) {}
+  }
+
+  void _refreshLiveSteps() {
+    try {
+      final tc = _tracking ?? Get.find<TrackingController>();
+      final live = tc.liveSteps.value.toDouble();
+      if (live > 0) liveStepsToday.value = live;
+      walkingStatusLive.value = tc.pedestrianStatus.value;
     } catch (_) {}
   }
 
@@ -70,9 +93,9 @@ class DashboardController extends GetxController {
         if ((stepsByDate[k] ?? 0) < a.value) stepsByDate[k] = a.value;
       }
 
-      // Override today's Firestore value with live pedometer reading
-      if (_tracking != null) {
-        stepsByDate[_dateKey(now)] = _tracking!.liveSteps.value.toDouble();
+      // Override today's Firestore value with the live pedometer reading.
+      if (liveStepsToday.value > 0) {
+        stepsByDate[_dateKey(now)] = liveStepsToday.value;
       }
 
       int streak = 0;
@@ -126,13 +149,14 @@ class DashboardController extends GetxController {
       .fold(0.0, (s, e) => s + e.value);
 
   double get stepsTotal {
-    if (isToday && _tracking != null) {
-      return _tracking!.liveSteps.value.toDouble();
+    if (isToday) {
+      final live = liveStepsToday.value;
+      return live > 0 ? live : _sum('steps');
     }
     return _sum('steps');
   }
 
-  String get walkingStatus => _tracking?.pedestrianStatus.value ?? 'unknown';
+  String get walkingStatus => walkingStatusLive.value;
 
   double get waterMl => _sum('water');
   double get caloriesKcal => _sum('calories');

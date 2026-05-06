@@ -25,9 +25,9 @@ class AuthTextField extends StatelessWidget {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: label,
-        hintStyle: TextStyle(color: AppColors.textSecondary),
+        hintStyle: TextStyle(color: context.secondaryText),
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: AppColors.textSecondary, size: 20)
+            ? Icon(prefixIcon, color: context.secondaryText, size: 20)
             : null,
       ),
     );

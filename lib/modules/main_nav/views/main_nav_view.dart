@@ -46,7 +46,7 @@ class _BottomNav extends StatelessWidget {
     return Container(
       height: 80,
       decoration: BoxDecoration(
-        color: AppColors.cardWhite,
+        color: context.cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withAlpha(15),
@@ -136,7 +136,7 @@ class _NavIcon extends StatelessWidget {
                 icon,
                 color: selected
                     ? AppColors.primary
-                    : AppColors.textSecondary,
+                    : context.secondaryText,
                 size: 22,
               ),
             ),
@@ -146,7 +146,7 @@ class _NavIcon extends StatelessWidget {
               style: TextStyle(
                 color: selected
                     ? AppColors.primary
-                    : AppColors.textSecondary,
+                    : context.secondaryText,
                 fontSize: 10,
                 fontWeight:
                     selected ? FontWeight.w600 : FontWeight.w400,

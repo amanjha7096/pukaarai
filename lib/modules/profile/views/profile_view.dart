@@ -17,7 +17,7 @@ class ProfileView extends StatelessWidget {
     final initials = _initials(displayName);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bgColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 28, 20, 100),
@@ -215,7 +215,7 @@ class _ThemeToggleTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardWhite,
+        color: context.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -242,7 +242,7 @@ class _ThemeToggleTile extends StatelessWidget {
               style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary)),
+                  color: context.primaryText)),
           const Spacer(),
           Obx(() => Switch.adaptive(
                 value: theme.isDark.value,

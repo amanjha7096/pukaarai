@@ -14,6 +14,7 @@ class FakeActivityRepository extends ActivityRepository {
 
   bool throwOnDelete = false;
   bool throwOnFetch = false;
+  double? todayStepsRemote; // set this to simulate a Firestore steps value
 
   FakeActivityRepository({
     List<ActivityModel>? activitiesForRange,
@@ -47,6 +48,9 @@ class FakeActivityRepository extends ActivityRepository {
     if (throwOnDelete) throw Exception('delete error');
     deletedIds.add(id);
   }
+
+  @override
+  Future<double?> fetchTodaySteps() async => todayStepsRemote;
 
   @override
   Future<void> upsertTodaySteps(double steps) async {

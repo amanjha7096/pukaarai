@@ -50,7 +50,7 @@ class _GoalsViewState extends State<GoalsView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bgColor,
       body: SafeArea(
         child: Obx(() {
           if (_ctrl.isLoading.value) {

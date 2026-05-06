@@ -88,6 +88,24 @@ class ActivityRepository {
         .set(activity.toJson());
   }
 
+  // Reads the single steps document for today without a collection scan.
+  Future<double?> fetchTodaySteps() async {
+    final user = FirebaseService.currentUser;
+    if (user == null) return null;
+    final now = DateTime.now();
+    final dateKey =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    try {
+      final doc = await FirebaseService.userActivitiesRef(user.uid)
+          .doc('steps_$dateKey')
+          .get();
+      if (!doc.exists) return null;
+      return (doc.data()?['value'] as num?)?.toDouble();
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> deleteActivity(String id) async {
     final user = FirebaseService.currentUser;
     if (user == null) return;

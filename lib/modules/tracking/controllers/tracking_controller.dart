@@ -53,6 +53,9 @@ class TrackingController extends GetxController {
     liveSteps.value = _manualStepsToday + _prevSessionSteps;
     _restoreSleepState();
     _requestPermissionThenStart();
+    // Best-effort: sync liveSteps from Firestore in case local storage is
+    // stale (e.g. app was force-killed before onClose could save prev_steps).
+    _syncFromFirestore();
   }
 
   void _restoreSleepState() {
@@ -144,10 +147,49 @@ class TrackingController extends GetxController {
     );
 
     _statusSub = Pedometer.pedestrianStatusStream.listen(
-      (PedestrianStatus e) => pedestrianStatus.value = e.status,
+      (PedestrianStatus e) {
+        final prev = pedestrianStatus.value;
+        pedestrianStatus.value = e.status;
+        // Save immediately when the user transitions from walking → stopped,
+        // so the DB is up-to-date even before the 90-second debounce fires.
+        if (prev == 'walking' && e.status == 'stopped' && liveSteps.value > 0) {
+          _autoSave();
+        }
+      },
       onError: (dynamic _) => pedestrianStatus.value = 'unavailable',
       cancelOnError: false,
     );
+  }
+
+  // Fetch today's Firestore step count and update liveSteps if the remote value
+  // is ahead of local (handles force-kill where onClose never ran).
+  Future<void> _syncFromFirestore() async {
+    try {
+      final remote = await _repo.fetchTodaySteps();
+      if (remote == null || remote <= 0) return;
+      if (remote <= liveSteps.value) return;
+
+      final key = _todayKey();
+      final manual = _manualStepsToday;
+
+      if (_freshSession) {
+        // No pedometer events yet — safe to just update prev_steps directly.
+        final pedoOnly = (remote - manual).clamp(0, double.maxFinite).toInt();
+        _storage.write('$_prevKey$key', pedoOnly);
+      } else {
+        // Pedometer is already running. Adjust prev_steps so that the
+        // already-accumulated sensor delta is correctly subtracted:
+        //   new_prev = remote - manualToday - currentDelta
+        // This ensures the next step event computes liveSteps = remote + newStep.
+        final baseline = _storage.read<int>('$_baseKey$key') ?? rawSensorSteps.value;
+        final currentDelta = (rawSensorSteps.value - baseline).clamp(0, rawSensorSteps.value);
+        final pedoOnly = (remote - manual - currentDelta).clamp(0, double.maxFinite).toInt();
+        _storage.write('$_prevKey$key', pedoOnly);
+      }
+
+      liveSteps.value = remote.toInt();
+      _lastAutoSavedSteps = remote.toInt(); // already in DB, skip redundant write
+    } catch (_) {} // best-effort; failures are non-fatal
   }
 
   void _onStep(StepCount event) {

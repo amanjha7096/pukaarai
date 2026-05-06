@@ -40,7 +40,7 @@ class _TrackingViewState extends State<TrackingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bgColor,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 28, 20, 100),
@@ -154,14 +154,14 @@ class _TrackingViewState extends State<TrackingView> {
                   ),
                   const Divider(height: 18, thickness: 0.5),
                   // Raw sensor count
-                  _diagRow(
-                    label: 'Sensor (raw)',
-                    value: _ctrl.rawSensorSteps.value == 0
-                        ? 'Waiting for signal…'
-                        : _ctrl.rawSensorSteps.value.toString(),
-                    valueColor: AppColors.textPrimary,
-                  ),
-                  const Divider(height: 18, thickness: 0.5),
+                  // _diagRow(
+                  //   label: 'Sensor (raw)',
+                  //   value: _ctrl.rawSensorSteps.value == 0
+                  //       ? 'Waiting for signal…'
+                  //       : _ctrl.rawSensorSteps.value.toString(),
+                  //   valueColor: AppColors.textPrimary,
+                  // ),
+                  // const Divider(height: 18, thickness: 0.5),
                   // Stream active
                   _diagRow(
                     label: 'Stream',

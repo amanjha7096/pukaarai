@@ -19,21 +19,21 @@ void main() {
 
   String daysAgo(int n) => _dk(DateTime(now.year, now.month, now.day - n));
 
-  late Directory _tempDir;
+  late Directory tempDir;
 
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    _tempDir = await Directory.systemTemp.createTemp('gs_goals_');
+    tempDir = await Directory.systemTemp.createTemp('gs_goals_');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
       const MethodChannel('plugins.flutter.io/path_provider'),
-      (_) async => _tempDir.path,
+      (_) async => tempDir.path,
     );
     await GetStorage.init();
   });
 
   tearDownAll(() async {
-    try { await _tempDir.delete(recursive: true); } catch (_) {}
+    try { await tempDir.delete(recursive: true); } catch (_) {}
   });
 
   setUp(() {

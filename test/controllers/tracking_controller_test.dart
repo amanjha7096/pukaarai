@@ -12,21 +12,21 @@ void main() {
   late FakeActivityRepository repo;
   late TrackingController ctrl;
 
-  late Directory _tempDir;
+  late Directory tempDir;
 
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    _tempDir = await Directory.systemTemp.createTemp('gs_tracking_');
+    tempDir = await Directory.systemTemp.createTemp('gs_tracking_');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
       const MethodChannel('plugins.flutter.io/path_provider'),
-      (_) async => _tempDir.path,
+      (_) async => tempDir.path,
     );
     await GetStorage.init();
   });
 
   tearDownAll(() async {
-    try { await _tempDir.delete(recursive: true); } catch (_) {}
+    try { await tempDir.delete(recursive: true); } catch (_) {}
   });
 
   setUp(() {

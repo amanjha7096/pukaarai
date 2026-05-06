@@ -8,21 +8,21 @@ import 'package:get_storage/get_storage.dart';
 import 'package:tracking/core/controllers/theme_controller.dart';
 
 void main() {
-  late Directory _tempDir;
+  late Directory tempDir;
 
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    _tempDir = await Directory.systemTemp.createTemp('gs_theme_');
+    tempDir = await Directory.systemTemp.createTemp('gs_theme_');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
       const MethodChannel('plugins.flutter.io/path_provider'),
-      (_) async => _tempDir.path,
+      (_) async => tempDir.path,
     );
     await GetStorage.init();
   });
 
   tearDownAll(() async {
-    try { await _tempDir.delete(recursive: true); } catch (_) {}
+    try { await tempDir.delete(recursive: true); } catch (_) {}
   });
 
   setUp(() {

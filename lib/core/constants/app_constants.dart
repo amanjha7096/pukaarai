@@ -47,3 +47,21 @@ class AppGoals {
   static const double calories = 2000;
   static const double sleep = 8;
 }
+
+// ── BuildContext extension for reactive theme-aware colors ────────────────────
+// Calling any of these in build() registers a dependency on the Theme
+// InheritedWidget, so the widget rebuilds automatically when dark/light mode
+// is toggled — even if it uses AppColors.xxx elsewhere in the same build call.
+extension ThemeColors on BuildContext {
+  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+  Color get bgColor => Theme.of(this).scaffoldBackgroundColor;
+  Color get cardColor => Theme.of(this).colorScheme.surface;
+  Color get primaryText => Theme.of(this).textTheme.titleMedium!.color!;
+  Color get secondaryText => Theme.of(this).textTheme.bodyMedium!.color!;
+  Color get errorSurfaceColor =>
+      isDarkMode ? const Color(0xFF3A1010) : const Color(0xFFFFF0F0);
+  Color get deleteSurfaceColor =>
+      isDarkMode ? const Color(0xFF3A1010) : const Color(0xFFFFEEEE);
+  Color get dividerCol =>
+      isDarkMode ? const Color(0xFF2A2A40) : const Color(0xFFF0F0F8);
+}

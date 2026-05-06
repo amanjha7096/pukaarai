@@ -72,7 +72,7 @@ class _DashboardViewState extends State<DashboardView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bgColor,
       body: SafeArea(
         child: Obx(() {
           if (_ctrl.isLoading.value && _ctrl.activities.isEmpty) {
@@ -461,44 +461,50 @@ class _DashboardViewState extends State<DashboardView>
           ),
           Expanded(
             child: Center(
-              // AnimatedBuilder uses _ringAnim to sweep the arc from 0 → progress
-              child: Obx(() {
-                final progress = _ctrl.stepsProgress;
-                return SizedBox(
-                  width: 112,
-                  height: 112,
-                  child: AnimatedBuilder(
-                    animation: _ringAnim,
-                    builder: (context, _) => CustomPaint(
-                      painter: CircularProgressPainter(
-                        progress: progress * _ringAnim.value,
-                        trackColor: Colors.white24,
-                        progressColor: Colors.white,
-                        strokeWidth: 10,
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
+              child: SizedBox(
+                width: 112,
+                height: 112,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Ring sweeps in via animation; progress stays reactive via Obx
+                    Positioned.fill(
+                      child: Obx(() {
+                        final progress = _ctrl.stepsProgress;
+                        return AnimatedBuilder(
+                          animation: _ringAnim,
+                          builder: (_, child) => CustomPaint(
+                            painter: CircularProgressPainter(
+                              progress: progress * _ringAnim.value,
+                              trackColor: Colors.white24,
+                              progressColor: Colors.white,
+                              strokeWidth: 10,
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                    // Text in its own Obx so it updates independently of animation
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(() => Text(
                               _ctrl.stepsCenterLabel,
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),
-                            ),
-                            Text(
+                            )),
+                        Obx(() => Text(
                               _ctrl.stepsCenterUnit,
                               style: const TextStyle(
                                   color: Colors.white70, fontSize: 9),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )),
+                      ],
                     ),
-                  ),
-                );
-              }),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
