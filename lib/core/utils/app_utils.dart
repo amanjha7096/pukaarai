@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 class AppUtils {
   static void showError(String message) {
+    if (Get.testMode) return;
     Get.closeAllSnackbars();
     Get.snackbar(
       '',
@@ -34,6 +35,7 @@ class AppUtils {
   }
 
   static void showSuccess(String message) {
+    if (Get.testMode) return;
     Get.closeAllSnackbars();
     Get.snackbar(
       '',
