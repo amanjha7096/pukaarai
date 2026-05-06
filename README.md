@@ -4,6 +4,57 @@ A Flutter health activity tracking app that monitors steps, water intake, calori
 
 ---
 
+## Download
+
+[![Download APK](https://img.shields.io/badge/Download-APK-6C63FF?style=for-the-badge&logo=android&logoColor=white)](apk/app-release.apk)
+
+---
+
+## Demo
+
+> GitHub does not play `.mp4` files inline. Click the link below to download and watch the recording.
+
+[▶ Watch screen recording](screenshots/Screen_recording_20260506_222524.mp4)
+
+---
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><b>Dashboard · Light</b></td>
+    <td align="center"><b>Dashboard · Dark</b></td>
+    <td align="center"><b>Goals &amp; Streaks</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/img.png" width="220" alt="Dashboard light mode"/></td>
+    <td><img src="screenshots/img_8.png" width="220" alt="Dashboard dark mode"/></td>
+    <td><img src="screenshots/img_1.png" width="220" alt="Goals and streaks"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Track · Steps</b></td>
+    <td align="center"><b>Track · Water &amp; Calories</b></td>
+    <td align="center"><b>Track · Sleep &amp; Heart Rate</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/img_2.png" width="220" alt="Track activity steps"/></td>
+    <td><img src="screenshots/img_3.png" width="220" alt="Track water and calories"/></td>
+    <td><img src="screenshots/img_4.png" width="220" alt="Track sleep and heart rate"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>History · Log</b></td>
+    <td align="center"><b>History · Charts</b></td>
+    <td align="center"><b>Profile</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/img_5.png" width="220" alt="Activity history list"/></td>
+    <td><img src="screenshots/img_6.png" width="220" alt="Activity history charts"/></td>
+    <td><img src="screenshots/img_7.png" width="220" alt="Profile screen"/></td>
+  </tr>
+</table>
+
+---
+
 ## Features
 
 - **Step Tracking** — Live pedometer integration with session-baseline management, manual entry fallback, and 90-second auto-save to Firestore
