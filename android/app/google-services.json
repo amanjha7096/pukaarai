@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "66742446932",
+    "project_id": "tracking-assgn",
+    "storage_bucket": "tracking-assgn.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66742446932:android:30259f8f197e4fa3a7f6c1",
+        "android_client_info": {
+          "package_name": "com.example.tracking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZDhCTkcdHk-WQAEkh6oeqQEpSOSHN1N4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
